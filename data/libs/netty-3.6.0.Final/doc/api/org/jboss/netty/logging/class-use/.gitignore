@@ -1,0 +1,10 @@
+/AbstractInternalLogger.html
+/CommonsLoggerFactory.html
+/InternalLogLevel.html
+/InternalLogger.html
+/InternalLoggerFactory.html
+/JBossLoggerFactory.html
+/JdkLoggerFactory.html
+/Log4JLoggerFactory.html
+/OsgiLoggerFactory.html
+/Slf4JLoggerFactory.html
