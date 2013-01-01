@@ -20,7 +20,7 @@ public class Player extends Actor {
 	}
 
 	@Override
-	protected int getIdCounter() {
+	protected int getActorIdCounter() {
 		return counter++;
 	}
 	

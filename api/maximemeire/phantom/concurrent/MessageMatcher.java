@@ -4,9 +4,12 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import maximemeire.phantom.concurrent.annotations.OnHandlerSwap;
 import maximemeire.phantom.concurrent.annotations.OnKill;
 import maximemeire.phantom.concurrent.annotations.OnMessage;
+import maximemeire.phantom.util.Logging;
 
 /**
  * @author Maxime Meire
@@ -22,6 +25,8 @@ public class MessageMatcher {
 	 * The class instance that contains the message handlers.
 	 */
 	private Object handler;
+	
+	private final static Logger LOGGER = Logging.log();
 	
 	/**
 	 * Creates a new MessageInterpreter instance.
@@ -141,7 +146,7 @@ public class MessageMatcher {
 			OnMessage annotation = m.getAnnotation(OnMessage.class);
 			if (annotation != null) {
 				methodMessages.put(annotation.type(), m);
-				System.out.println("Cached method: " + m.getName() + " with message object: " + annotation.type().getName());
+				LOGGER.info("Cached method '" + m.getName() + "' with message object '" + annotation.type().getName() + "'");
 			}
 		}
 	}

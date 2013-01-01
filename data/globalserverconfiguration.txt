@@ -1,0 +1,55 @@
+# Global server configuration file.
+#
+# This file can be used across all servers to determine their connections and settings.
+#
+# Only use one single # at the beginning of a line to comment the line.
+#
+# FORMAT
+# 
+# MANDATORY
+# | TYPE 			= type of server [root | world]
+# | IP				= the ip the server is running on
+# | PORT			= the port the server is running on
+
+# NON MANDATORY 
+# (see http://docs.oracle.com/javase/6/docs/technotes/guides/net/socketOpt.html and google for more info)
+# | BLOCKING		= whether to have a blocking or non-blocking configuration [true | false]
+# | KEEPALIVE		= [true | false] default=true
+# | REUSEADDR		= [true | false] default=false
+# | LINGER			= [0..2^16 - 1]  default=0
+# | TCPNODELAY		= [true | false] default=true
+# | RCVBUF			= [-1 | 100..] default=-1 (not set, play around with this based on your network behaviour)
+# | SNDBUF			= [-1 | 100..] default=-1 (not set, play around with this based on your network behaviour)
+  
+TYPE		= root 
+IP			= 127.0.0.1 
+PORT		= 50001
+BLOCKING	= false
+KEEPALIVE	= true
+REUSEADDR	= false
+LINGER		= 0
+TCPNODELAY	= true
+RCVBUF		= -1
+SNDBUF		= -1
+
+TYPE		= world 
+IP			= 127.0.0.1 
+PORT		= 40001
+BLOCKING	= false
+KEEPALIVE	= true
+REUSEADDR	= false
+LINGER 		= 0
+TCPNODELAY	= true
+RCVBUF		= -1
+SNDBUF		= -1
+
+TYPE		= world 
+IP			= 127.0.0.1 
+PORT		= 40002
+BLOCKING	= false
+KEEPALIVE	= true
+REUSEADDR	= false
+LINGER		= 0
+TCPNODELAY	= true
+RCVBUF		= -1
+SNDBUF		= -1

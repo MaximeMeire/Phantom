@@ -3,6 +3,10 @@ package maximemeire.phantom.concurrent;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import maximemeire.phantom.util.Logging;
+
 /**
  * @author Maxime Meire
  *
@@ -25,6 +29,8 @@ public class ActorUniverse {
 	 * The list of {@link MessageMultiplexer} objects that handle this universe.
 	 */
 	public List<MessageMultiplexer<?>> multiplexers = new ArrayList<MessageMultiplexer<?>>();
+	
+	private final static Logger LOGGER = Logging.log();
 	
 	/**
 	 * Creates a new ActorUniverse instance.
@@ -55,7 +61,7 @@ public class ActorUniverse {
 		MessageMultiplexer<?> multiplexer = multiplexers.get(currentMultiplexer++);
 		currentMultiplexer %= threadCount;
 		actor.setupActor(this, matcher, multiplexer);
-		System.out.println(actor.getAddress() + " created on multiplexer " + multiplexer.getId());
+		LOGGER.info(actor.getAddress() + " created on multiplexer " + multiplexer.getId());
 		return actor;
 	}
 

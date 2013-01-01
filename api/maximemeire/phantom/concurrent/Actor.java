@@ -36,8 +36,6 @@ public abstract class Actor {
 	 */
 	private boolean active = false;
 	
-	public Object futureLock = new Object();
-	
 	public Actor() { }
 	
 	/**
@@ -51,7 +49,7 @@ public abstract class Actor {
 			this.universe = universe;
 			this.matcher = matcher;
 			this.multiplexer = multiplexer;
-			this.address = Address.newAddress(universe.getName(), this.getClass().getSimpleName() + getIdCounter());
+			this.address = Address.newAddress(universe.getName(), this.getClass().getSimpleName() + getActorIdCounter());
 			this.active = true;
 		}
 	}
@@ -60,7 +58,7 @@ public abstract class Actor {
 	 * Returns the ID of a newly created sub actor class.
 	 * @return The ID of a newly created sub actors class.
 	 */
-	protected abstract int getIdCounter();
+	protected abstract int getActorIdCounter();
 
 	/**
 	 * Send a {@link Message} to this actor.
