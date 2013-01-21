@@ -121,7 +121,7 @@ public class DynamicOutboundBuffer extends DynamicChannelBuffer {
 		return this;
 	}
 	
-	public DynamicOutboundBuffer writeBits(int length, int value) {
+	public DynamicOutboundBuffer put_bits(int length, int value) {
 		int bytePos = bitPos >> 3;
 		int bitOffset = 8 - (bitPos & 7);
 		bitPos += length;
@@ -137,6 +137,13 @@ public class DynamicOutboundBuffer extends DynamicChannelBuffer {
 			XORBit(bytePos, bitMask[length] << (bitOffset - length));
 			ANDBit(bytePos, (value & bitMask[bitOffset]) << (bitOffset - length));
 		}
+		return this;
+	}
+	
+	public DynamicOutboundBuffer put_s(String string) {
+		byte[] s = string.getBytes();
+		writeBytes(s);
+		put8(10);
 		return this;
 	}
 	

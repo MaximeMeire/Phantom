@@ -1,17 +1,23 @@
 package maximemeire.phantom.model.entity.player;
 
+import maximemeire.phantom.concurrent.Link;
 import maximemeire.phantom.concurrent.Message;
+import maximemeire.phantom.network.PacketEncoder;
 
-public class EncodePacketMessage<T extends Player> extends Message<T> {
+public class EncodePacketMessage<Receiver extends Player> extends Message<Receiver> {
 	
-	public final int opcode;
-	public final int size;
+	public final PacketEncoder encoder;
 	public final Object context;
+	
+	public EncodePacketMessage(PacketEncoder encoder, Object context, Link link) {
+		super(link);
+		this.encoder = encoder;
+		this.context = context;
+	}
 
-	public EncodePacketMessage(int opcode, int size, Object context, T sender, T receiver, Runnable future) {
-		super(sender, receiver, future);
-		this.opcode = opcode;
-		this.size = size;
+	public EncodePacketMessage(PacketEncoder encoder, Object context, Link link, Runnable future) {
+		super(link, future);
+		this.encoder = encoder;
 		this.context = context;
 	}
 

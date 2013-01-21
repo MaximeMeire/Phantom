@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import maximemeire.phantom.concurrent.Message;
 import maximemeire.phantom.concurrent.annotations.OnHandlerSwap;
 import maximemeire.phantom.concurrent.annotations.OnKill;
 import maximemeire.phantom.concurrent.annotations.OnMessage;
@@ -40,11 +41,12 @@ public class MessageMatcher {
 	/**
 	 * Called when a message is delivered by a {@link MessageMultiplexer}. This method calls
 	 * the correct method mapped to the message.
-	 * @param <T> The {@link Actor} type.
+	 * @param <Sender> The {@link Actor} sender type.
+	 * @param <Receiver> The {@link Actor} receiver type.
 	 * @param message The {@link Message} sent to the {@link Actor} this interpreter belongs to.
 	 * @return The return type of the method invoked.
 	 */
-	public <T extends Actor> Object onMessageDelivery(Message<T> message) {
+	public <Receiver extends Actor> Object onMessageDelivery(Message<Receiver> message) {
 		try {
 			Method method = getMessageHandler(message);
 			if (method != null) {
@@ -67,10 +69,10 @@ public class MessageMatcher {
 	
 	/**
 	 * Called when the actor requires a handler swap and executes the {@link OnHandlerSwap} method.
-	 * @param <T> The {@link Actor} type.
+	 * @param <A> The {@link Actor} type.
 	 * @return The return type of the method invoked.
 	 */
-	public <T extends Actor> Object onHandlerSwap() {
+	public <A extends Actor> Object onHandlerSwap() {
 		try {
 			Method method = getOnHandlerSwapHandler();
 			if (method != null) {
@@ -87,10 +89,10 @@ public class MessageMatcher {
 	
 	/**
 	 * Called when the actor requires to be killed and executes the {@link OnKill} method.
-	 * @param <T>
+	 * @param <A>
 	 * @return
 	 */
-	public <T extends Actor> Object onKill() {
+	public <A extends Actor> Object onKill() {
 		try {
 			Method method = getOnKillHandler();
 			if (method != null) {
@@ -107,10 +109,12 @@ public class MessageMatcher {
 	
 	/**
 	 * Gets the method to which the specified {@link Message} is mapped.
+	 * @param <Sender> The {@link Actor} sender type.
+	 * @param <Receiver> The {@link Actor} receiver type.
 	 * @param message The mapped {@link Message} object.
 	 * @return The mapped method.
 	 */
-	private <T extends Actor> Method getMessageHandler(Message<T> message) {
+	private <Receiver extends Actor> Method getMessageHandler(Message<Receiver> message) {
 		Method method;
 		Class<?> type = message.getClass();
 		do {

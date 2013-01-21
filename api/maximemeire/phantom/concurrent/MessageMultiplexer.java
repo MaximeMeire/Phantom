@@ -1,48 +1,58 @@
 package maximemeire.phantom.concurrent;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import maximemeire.phantom.task.Task;
 
 /** 
  * @author Maxime Meire
  *
  */
-public class MessageMultiplexer<T extends Actor> extends Thread {
+public class MessageMultiplexer<T extends Actor> {
 	
 	private final int id;
-	private boolean active = true;
-	private final BlockingQueue<Message<?>> queue = new LinkedBlockingQueue<Message<?>>();
+	private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 	
 	public MessageMultiplexer(int id) {
 		this.id = id;
 	}
-
-	@Override
-	public void run() {
-		while (active) {
-			try {
-				Message<?> message = queue.take();
-				message.deliver();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				shutDown();
-			} catch (Exception e) {
-				e.printStackTrace();
-				shutDown();
-			}
-		}
+	
+	public Task<?> registerTask(Task<?> task) {
+		executor.execute(task);
+		return task;
 	}
 	
-	public void send(Message<?> message) {
-		queue.offer(message);
+	public Task<?> registerTask(Task<?> task, int delay) {
+		ScheduledFuture<?> future = executor.schedule(task, delay, TimeUnit.MILLISECONDS);
+		task.setScheduledFuture(future);
+		return task;
+	}
+	
+	public Task<?> registerTask(Task<?> task, int initialDelay, int interval) {
+		ScheduledFuture<?> future = executor.scheduleWithFixedDelay(task, initialDelay, interval, TimeUnit.MILLISECONDS);
+		task.setScheduledFuture(future);
+		return task;
+	}
+	
+	public Task<?> registerTask(Task<?> task, int initialDelay, int interval, TimeUnit timeUnit) {
+		ScheduledFuture<?> future = executor.scheduleWithFixedDelay(task, initialDelay, interval, timeUnit);
+		task.setScheduledFuture(future);
+		return task;
+	}
+	
+	public void send(final Message<?> message) {
+		executor.execute(message);
 	}
 
-	public int getMultiplexerId() {
+	public int getId() {
 		return id;
 	}
 	
 	public void shutDown() {
-		this.active = false;
+		executor.shutdown();
 	}
 	
 }

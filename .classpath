@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="api"/>
+	<classpathentry kind="src" path="client/src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="worldserver"/>
+	<classpathentry exported="true" kind="lib" path="data/libs/log4j-1.2.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="data/libs/netty-3.6.0.Final/jar/netty-3.6.0.Final-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="data/libs/netty-3.6.0.Final/jar/netty-3.6.0.Final.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

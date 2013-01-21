@@ -1,7 +1,7 @@
 package maximemeire.phantom.network.tcpip;
 
-import maximemeire.phantom.worldserver.tcpip.codec.PacketDecoder;
-import maximemeire.phantom.worldserver.tcpip.codec.PacketEncoder;
+import maximemeire.phantom.network.PacketDecoder;
+import maximemeire.phantom.network.PacketEncoder;
 
 public abstract class Codec {
 	

@@ -37,7 +37,7 @@ public class ActorUniverseTest {
 					if (p == o) {
 						continue;
 					}
-					p.sendMessage(new PlayerMoveMessage<Player>(o, p, null, 1, 1));
+					p.sendMessage(new PlayerMoveMessage<Player>(1, 1, p.getLink(p)));
 				}
 			}
 		}

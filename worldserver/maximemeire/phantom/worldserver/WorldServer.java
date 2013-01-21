@@ -1,6 +1,6 @@
 package maximemeire.phantom.worldserver;
 
-import maximemeire.phantom.model.entity.World;
+import maximemeire.phantom.model.World;
 import maximemeire.phantom.network.tcpip.Server;
 import maximemeire.phantom.util.Logging;
 import maximemeire.phantom.worldserver.tcpip.WSChannelPipelineFactory;

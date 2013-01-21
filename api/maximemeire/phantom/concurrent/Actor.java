@@ -2,6 +2,10 @@ package maximemeire.phantom.concurrent;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import maximemeire.phantom.task.Task;
+import maximemeire.phantom.task.TaskManager;
 
 /**
  * @author Maxime Meire
@@ -19,13 +23,17 @@ public abstract class Actor {
 	protected ActorUniverse universe;
 	/**
 	 * The {@link MessageMatcher} this actor uses to dispatch messages to the current
-	 * {@link MessageHandler}
+	 * {@link MessageDispatcher}
 	 */
 	protected MessageMatcher matcher;
 	/**
 	 * The {@link MessageMultiplexer} this actor belongs to.
 	 */
 	protected MessageMultiplexer<?> multiplexer;
+	/**
+	 * The {@link TaskManager} this actor uses to execute scheduled tasks.
+	 */
+	protected TaskManager taskManager;
 	/**
 	 * The list of linked {@link Actor} objects. Linked actors are killed too when this
 	 * actor is killed.
@@ -35,8 +43,6 @@ public abstract class Actor {
 	 * Whether this actor can execute actions.
 	 */
 	private boolean active = false;
-	
-	public Actor() { }
 	
 	/**
 	 * 
@@ -49,23 +55,44 @@ public abstract class Actor {
 			this.universe = universe;
 			this.matcher = matcher;
 			this.multiplexer = multiplexer;
-			this.address = Address.newAddress(universe.getName(), this.getClass().getSimpleName() + getActorIdCounter());
+			this.address = Address.newAddress(universe.getName(), this.getClass().getSimpleName() + getActorId());
+			this.taskManager = new TaskManager(this);
 			this.active = true;
 		}
+	}
+	
+	public Link getLink(Actor receiver) {
+		return new Link(this, receiver);
 	}
 
 	/**
 	 * Returns the ID of a newly created sub actor class.
-	 * @return The ID of a newly created sub actors class.
+	 * @return The ID of a newly created sub actor class.
 	 */
-	protected abstract int getActorIdCounter();
+	protected abstract int getActorId();
+	
+	public void registerTask(String name, Task<?> task) {
+		taskManager.registerTask(name, task);
+	}
+	
+	public void registerTask(String name, Task<?> task, int delay) {
+		taskManager.registerTask(name, task, delay);
+	}
+	
+	public void registerTask(String name, Task<?> task, int delay, int interval) {
+		taskManager.registerTask(name, task, delay, interval);
+	}
+	
+	public void registerTask(String name, Task<?> task, int initialDelay, int interval, TimeUnit timeUnit) {
+		taskManager.registerTask(name, task, initialDelay, interval, timeUnit);
+	}
 
 	/**
-	 * Send a {@link Message} to this actor.
-	 * @param message The {@link Message} to send to this actor.
+	 * Send a {@link Sender} to this actor.
+	 * @param Sender The {@link Sender} to send to this actor.
 	 */
-	public <T extends Actor> void sendMessage(Message<T> message) {
-		multiplexer.send(message);
+	public <Receiver extends Actor> void sendMessage(Message<Receiver> message) {
+		universe.sendMessage(message);//multiplexer.send(message);
 	}
 	
 	/**
@@ -73,7 +100,7 @@ public abstract class Actor {
 	 * @param message The {@link Message} to send to this actor.
 	 * @throws Exception TODO undefined
 	 */
-	public <T extends Actor> Object deliverMessage(Message<T> message) {
+	public <Receiver extends Actor> Object deliverMessage(Message<Receiver> message) {
 		return matcher.onMessageDelivery(message);
 	}
 	
@@ -111,8 +138,8 @@ public abstract class Actor {
 	}
 	
 	/**
-	 * Kills the actor. ONLY to be called within a handler method in the {@link MessageHandler}.
-	 * NEVER call this method outside the {@link MessageHandler} linked to this actor.
+	 * Kills the actor. ONLY to be called within a handler method in the {@link MessageDispatcher}.
+	 * NEVER call this method outside the {@link MessageDispatcher} linked to this actor.
 	 */
 	public void kill() {
 		active = false;
@@ -125,6 +152,10 @@ public abstract class Actor {
 
 	public Address getAddress() {
 		return address;
+	}
+	
+	public MessageMultiplexer<?> getMultiplexer() {
+		return multiplexer;
 	}
 
 	public boolean isActive() {
